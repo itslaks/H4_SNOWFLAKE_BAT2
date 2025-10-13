@@ -1,0 +1,67 @@
+1) snowflake account create 
+
+2) create azure databricks in azure 
+
+3) after creating azure databricks open it and  create new compute
+
+4) after creating new compute there will be an option that is libraries 
+
+5) In libraries select maven and paste the below line,
+
+net.snowflake:spark-snowflake_2.12:2.12.0-spark_3.4
+
+6) then wait for few minutes then again restart the cluster 
+
+7) now open snowflake and create new database then new table and insert values 
+
+For Example take below reference,
+CREATE OR REPLACE DATABASE TRAINING_DB;
+
+CREATE OR REPLACE SCHEMA TRAINING_DB.RAW;
+
+CREATE OR REPLACE TABLE TRAINING_DB.RAW.SALES(
+ID INT,
+CUSTOMER STRING,
+AMOUNT FLOAT,
+SALE_DATE DATE
+);
+    
+
+
+insert into sales values (101 , 'Tina' , 34500 , '2025-10-10');
+
+select * from sales
+
+
+8) next we need to connect databricks and snowflake so,
+
+9) In databricks paste the below code with your credinals,
+
+options = {
+    "sfURL": "kcsvubi-lc68850.snowflakecomputing.com",
+    "sfDatabase": "TRAINING_DB",
+    "sfSchema": "RAW",
+    "sfWarehouse": "COMPUTE_WH",
+    "sfRole": "SYSADMIN",
+    "sfUser": "laks13",
+    "sfPassword": "Lakshan,098!!!"
+}
+df = spark.read.format("snowflake").options(**options).option("dbtable", "SALES").load()
+df.show()
+
+Here,
+
+For sfURL take your snowflake URL,
+
+https://app.snowflake.com/kcsvubi/lc68850/#/homepage
+
+Here kcsvubi first part 
+and lc68850 second part 
+
+given your new created database and table details 
+
+atlast in sfuser and password your snowflake username and password 
+
+10) after executing this you can see the inserted value (which we created in snowflake will be visible in databricks) 
+if it shows properly then connection is success.
+
