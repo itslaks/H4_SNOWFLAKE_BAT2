@@ -1,0 +1,85 @@
+Here we are connecting,
+
+Blob storage -> databricks (community edition) -> snowflake
+
+1) we are creating a new table in snowflake,
+
+CREATE OR REPLACE DATABASE PRACTICE;
+
+CREATE OR REPLACE TABLE SALES_CONN(
+ID INT,
+NAME STRING,
+ITEM STRING,
+AMOUNT NUMBER(10,2)
+);
+
+2) Then, we are creating Blob storage account in azure
+
+3) Now we need to connect blob storage -> databricks (community edition)
+so, we are going to SAS token to connect.
+
+4) After creating Blob storage we need to create a container in it,
+Then we need to upload the csv dataset in container manually,
+
+5) after creating blob storage, there will be an option known as "Shared access Signature"
+There we need to tick all the boxes,
+Then we can generate SAS token,
+
+6) Example SAS token,
+sv=2024-11-04&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-10-15T11:23:05Z&st=2025-10-15T03:08:05Z&spr=https&sig=TF%2FxtDg2gyFzW3dqWigO7W%2BCecAR2UciQgCczfa7QIQ%3D
+
+this is the example sas token we need to select parts of it to connect with databricks,
+Eg code,
+
+import pandas as pd
+
+url = (
+    "https://yourstorageaccount.blob.core.windows.net/yourcontainer/yourfile.csv"  
+    "?sv=2024-11-04&ss=bfqt&srt=sco&sp=rwdlacupiytfx"
+    "&se=2025-10-14T20:26:55Z&st=2025-10-14T12:11:55Z"
+    "&spr=https"
+    "&sig=l%2FOP6y8duPoXtonMcjmU23cd2J9%2BNErvg2eeP3ruqm8%3D"
+) # We need to add question mark before sas token then paste it line by line for clear readability 
+
+# Read the CSV file directly from Azure Blob Storage
+df = pd.read_csv(url, sep=",", encoding="utf-8-sig")
+
+print(df.head())
+
+
+7) we need to execute the above code in databricks,
+
+8) after executing this it need to display the csv files data
+
+9) Then, import snowflake in databricks,
+
+%pip install snowflake-connector-python[pandas]
+
+10) Then connect snowflake with databricks,
+
+import  pandas as pd
+import snowflake.connector
+from snowflake.connector.pandas_tools import write_pandas
+
+data=[(6,'rock','West',5000.00,'2024-10-5'),(7,'Austin','North',8000.00,'2025-09-5')]
+df=pd.DataFrame(data,columns=['ID','CUSTOEMR_NAME','REGION','AMOUNT','SALE_DATE'])
+
+conn = snowflake.connector.connect(
+    user='#snowflake username',
+    password='#snowflake password',
+    account='#snowflake login url',
+    warehouse='#warehouse name',
+    database='#database name',
+    schema='#schema name'
+)
+write_pandas(conn,df,'SALES')
+
+conn.close()
+
+11) now we have connected blob -> databricks , snowflake -> databricks
+
+12) so the last process is,
+
+#check in auth_blob_databricks_snowflake.ipynb
+
+13) That's all
