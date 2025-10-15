@@ -1,0 +1,61 @@
+TO copy data from azure blob to snowflake using azure data factory,
+
+1) create blob account , container , snowflake account and data factory
+
+2) for creating data factory as always we need to search and create in azure search bar
+
+3) after creating it we need to click launch studio
+
+4) Then, first we need to connect the blob storage and snowflake with data factory so,
+
+5) In manage option -> Linked services, click new 
+
+6) There we need to search azure blob storage and click continue,
+
+7) here , give name , Then in authentication type select SAS URL 
+
+8) paste the SAS URL there dont paste any thing SAS token space 
+
+9) Then give create 
+
+10) now again click new search snowflake then give name,
+
+11) for account name give account identifier from snowflake 
+
+12) Then database, warehouse name then authentication type select basic,
+
+13) username and password use snowflake's user name and password 
+
+14) then click save 
+
+15) now we have created connection for both blob and snowflake 
+
+16) click blob again in right corner click check connection to ensure proper connection is made if error occur rectify it and same for snowflake
+
+17) now click author (pencil icon) there click + icon,
+
+18) Dataset -> blob -> csv/excel -> name -> linked service select previously created blob name -> proper path
+
+19) same for snowflake in dataset 
+
+20) now go to snowflake create the database and table  (TIP: use VARCHAR FOR All because it is best no error will come max unless you have date)
+
+21) now again in azure data factory in -> In author -> create pipeline
+
+22) there move and transform option will be there click it ,
+
+23) draw copy data to the screen
+
+24) below you will get options,
+
+25) select source as blob
+
+26) select sink as snowflake 
+
+27) select mapping -> import schemas 
+
+28) now click validate all
+
+29) then click debug 
+
+30) thats all datas will be moved from blob to snowflake through data lake automation pipeline is created .
